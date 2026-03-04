@@ -1,0 +1,62 @@
+{
+  "root": true,
+  "ignorePatterns": ["**/*"],
+  "plugins": ["@nx"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "@nx/enforce-module-boundaries": [
+          "error",
+          {
+            "enforceBuildableLibDependency": true,
+            "allow": [],
+            "depConstraints": [
+              {
+                "sourceTag": "type:application",
+                "onlyDependOnLibsWithTags": ["type:library"]
+              },
+              {
+                "sourceTag": "type:e2e",
+                "onlyDependOnLibsWithTags": ["type:application"]
+              },
+              {
+                "sourceTag": "type:library",
+                "onlyDependOnLibsWithTags": ["type:library"]
+              },
+              {
+                "sourceTag": "scope:api",
+                "onlyDependOnLibsWithTags": ["scope:shared", "scope:api"]
+              },
+              {
+                "sourceTag": "scope:game",
+                "onlyDependOnLibsWithTags": ["scope:shared", "scope:game"]
+              },
+              {
+                "sourceTag": "scope:web",
+                "onlyDependOnLibsWithTags": ["scope:shared", "scope:web"]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@nx/typescript"],
+      "rules": {}
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nx/javascript"],
+      "rules": {}
+    },
+    {
+      "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+      "env": {
+        "jest": true
+      },
+      "rules": {}
+    }
+  ]
+}

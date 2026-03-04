@@ -1,0 +1,27 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": ".",
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "rootDir": ".",
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "sourceMap": true,
+    "paths": {
+      "@warpzone/api-plugins": ["libs/api-plugins/src/index.ts"],
+      "@warpzone/game-utils": ["libs/game-utils/src/index.ts"],
+      "@warpzone/shared-schemas": ["libs/shared-schemas/src/index.ts"],
+      "@warpzone/shared-utils": ["libs/shared-utils/src/index.ts"],
+      "@warpzone/web-ui": ["libs/web-ui/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
