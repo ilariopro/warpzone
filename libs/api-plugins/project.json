@@ -1,0 +1,8 @@
+{
+  "name": "api-plugins",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/api-plugins/src",
+  "projectType": "library",
+  "tags": ["scope:api", "type:library"],
+  "targets": {}
+}

@@ -1,0 +1,80 @@
+{
+  "name": "api-gaming-manager",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api-gaming-manager/src",
+  "projectType": "application",
+  "tags": ["scope:api", "type:application"],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/api-gaming-manager",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/api-gaming-manager/src/main.ts",
+        "tsConfig": "apps/api-gaming-manager/tsconfig.app.json",
+        "assets": [
+          "apps/api-gaming-manager/src/assets",
+          "apps/api-gaming-manager/package.json",
+          {
+            "input": "apps/api-gaming-manager",
+            "glob": "**/*.env",
+            "output": "."
+          }
+        ],
+        "external": ["mysql2"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "api-gaming-manager:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "api-gaming-manager:build:development"
+        },
+        "production": {
+          "buildTarget": "api-gaming-manager:build:production"
+        }
+      }
+    },
+    "make:migration": {
+      "command": "npx knex migrate:make --knexfile {projectRoot}/src/database/knexfile.ts"
+    },
+    "make:seed": {
+      "command": "npx knex seed:make --knexfile {projectRoot}/src/database/knexfile.ts --timestamp-filename-prefix"
+    },
+    "migrate": {
+      "command": "npx ts-node node_modules/.bin/knex migrate:latest --knexfile {projectRoot}/src/database/knexfile.ts"
+    },
+    "rollback": {
+      "command": "npx ts-node node_modules/.bin/knex migrate:rollback --knexfile {projectRoot}/src/database/knexfile.ts"
+    },
+    "seed": {
+      "command": "npx ts-node node_modules/.bin/knex seed:run --knexfile {projectRoot}/src/database/knexfile.ts"
+    }
+  }
+}
