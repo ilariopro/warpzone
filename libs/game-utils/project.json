@@ -1,0 +1,8 @@
+{
+  "name": "game-utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/game-utils/src",
+  "projectType": "library",
+  "targets": {},
+  "tags": ["scope:game", "type:library"]
+}
