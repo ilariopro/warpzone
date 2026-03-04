@@ -12,7 +12,7 @@ const AdminSidebar = () => {
         <Image
           className="h-8 w-auto"
           src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          altText="Welcome to Warp Zone"
+          altText="Warpzone"
         />
       </div>
       <nav className="flex flex-1 flex-col">
