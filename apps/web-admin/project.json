@@ -1,0 +1,15 @@
+{
+  "name": "web-admin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/web-admin/src",
+  "projectType": "application",
+  "tags": ["scope:web", "type:application"],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "options": {
+        "outputPath": "dist/apps/web-admin"
+      }
+    }
+  }
+}
