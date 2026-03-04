@@ -1,0 +1,7 @@
+include:
+  - ./docker-compose.$ENVIRONMENT.yml
+
+networks:
+  warpzone_network:
+    driver: bridge
+    name: warpzone_network

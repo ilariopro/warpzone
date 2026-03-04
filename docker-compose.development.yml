@@ -1,0 +1,124 @@
+services:
+  nginx:
+    container_name: warpzone_nginx
+    depends_on:
+      - api-gaming-manager
+      - game-hoopify-city
+      - web-admin
+    image: nginx:alpine
+    networks:
+      - warpzone_network
+    ports:
+      - 443:443
+      - 80:80
+    restart: on-failure
+    volumes:
+      - ./certs:/etc/nginx/ssl:ro
+      - ./docker/nginx/default.development.conf:/etc/nginx/conf.d/default.conf
+
+  api-gaming-manager:
+    container_name: warpzone_api_gaming_manager
+    command: npx nx run api-gaming-manager:serve:development
+    build:
+      dockerfile: ./docker/node/Dockerfile.development
+    depends_on:
+      - database
+    image: api-gaming-manager
+    networks:
+      - warpzone_network
+    ports:
+      - 3000:3000
+    restart: on-failure
+    volumes:
+      - ./:/var/www:Z
+      - node_modules:/var/www/node_modules:Z
+    environment:
+      APP_HOST: warpzone_api_gaming_manager
+      APP_PORT: 3000
+      DATABASE_NAME: $DATABASE_NAME
+      DATABASE_HOST: $DATABASE_HOST
+      DATABASE_PORT: $DATABASE_PORT
+      DATABASE_USER: $DATABASE_USER
+      DATABASE_PASSWORD: $DATABASE_PASSWORD
+      CORS_ORIGINS: $CORS_ORIGINS
+      ENVIRONMENT: development
+      MAIL_DRIVER: $MAIL_DRIVER
+      MAIL_ENCRYPTION: $MAIL_ENCRYPTION
+      MAIL_HOST: $MAIL_HOST
+      MAIL_PORT: $MAIL_PORT
+      MAIL_USERNAME: $MAIL_USERNAME
+      MAIL_PASSWORD: $MAIL_PASSWORD
+      SECRET_COOKIE: $SECRET_COOKIE
+      SECRET_JWT: $SECRET_JWT
+
+  game-hoopify-city:
+    container_name: warpzone_game_hoopify_city
+    command: npx nx serve game-hoopify-city
+    build:
+      dockerfile: ./docker/node/Dockerfile.development
+    depends_on:
+      - api-gaming-manager
+    image: game-hoopify-city
+    networks:
+      - warpzone_network
+    ports:
+      - 5200:5200
+    restart: on-failure
+    volumes:
+      - ./:/var/www:Z
+      - node_modules:/var/www/node_modules:Z
+    environment:
+      VITE_API_GAMING_MANAGER_ORIGIN: https://localhost/api
+      VITE_ENVIRONMENT: development
+      VITE_HOST: warpzone_game_hoopify_city
+      VITE_PORT: 5200
+
+  web-admin:
+    container_name: warpzone_web_admin
+    command: npx nx serve web-admin
+    build:
+      dockerfile: ./docker/node/Dockerfile.development
+    depends_on:
+      - api-gaming-manager
+    image: web-admin
+    networks:
+      - warpzone_network
+    ports:
+      - 4200:4200
+    restart: on-failure
+    volumes:
+      - ./:/var/www:Z
+      - node_modules:/var/www/node_modules:Z
+    environment:
+      VITE_API_GAMING_MANAGER_ORIGIN: https://localhost/api
+      VITE_ENVIRONMENT: development
+      VITE_HOST: warpzone_web_admin
+      VITE_PORT: 4200
+
+  database:
+    container_name: warpzone_database
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    image: mysql:8.0
+    networks:
+      - warpzone_network
+    ports:
+      - 3306:3306
+    restart: on-failure
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql:Z
+    environment:
+      MYSQL_DATABASE: $DATABASE_NAME
+      MYSQL_USER: $DATABASE_USER
+      MYSQL_PASSWORD: $DATABASE_PASSWORD
+      MYSQL_ROOT_PASSWORD: $DATABASE_PASSWORD
+
+  mailpit:
+    container_name: warpzone_mailpit
+    image: axllent/mailpit
+    restart: on-failure
+    ports:
+      - 1025:1025
+      - 8025:8025
+
+volumes:
+  node_modules:

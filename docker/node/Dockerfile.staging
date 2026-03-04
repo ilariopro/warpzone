@@ -1,0 +1,24 @@
+FROM node:18
+
+# Port to expose for the current project
+ARG EXPOSE_PORT
+
+# Name of the current project to build
+ARG PROJECT_NAME
+
+WORKDIR /var/www/$PROJECT_NAME
+
+# Copy only the files needed to install dependencies
+COPY ./dist/$PROJECT_NAME/package*.json ./
+
+# Install only production dependencies
+RUN npm install --production
+
+# Copy the rest of the app
+COPY ./dist/$PROJECT_NAME ./
+
+# Expose the specified port in the docker network 
+EXPOSE $EXPOSE_PORT
+
+# Run the app
+CMD ["node", "main.js"]
